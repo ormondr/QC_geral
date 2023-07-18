@@ -25,3 +25,9 @@ plink2 --bfile BHRC_Probands_genotype_QC --not-chr 0,23-26 --make-bed --keep-all
 plink --bfile BHRC_Probands_QC_semXY_geral --exclude BHRC_Probands_del.dupvar --make-bed --out BHRC_Probands_QCed
 
 
+###fiz um hiperlink renomeando
+ln -n BHRC_Probands_QCed.bed ../../../Projeto_bioinfo/BHRC_Probands_vars_QCed.bed              
+ln -n BHRC_Probands_QCed.bim ../../../Projeto_bioinfo/BHRC_Probands_vars_QCed.bim
+ln -n BHRC_Probands_QCed.fam ../../../Projeto_bioinfo/BHRC_Probands_vars_QCed.fam
+
+
