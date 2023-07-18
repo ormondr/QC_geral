@@ -1,0 +1,27 @@
+#######aqui um qc geral que eu acabei fazendo na pasta de colaboração com a usp 
+
+
+
+ #Script para controle de qualidade de dados de genotipagem.
+#PLINK v2.00a4 64-bit (9 Jan 2023) ##principal utilizado
+#PLINK v1.90b7 64-bit (16 Jan 2023)
+#por Rafaella Ormond, adaptado da Jessica Mauer
+
+#1) Remover indels e SNPs com mais de dois alelos
+
+plink2 --bfile BHRC_Probands --snps-only just-acgt --make-bed --out BHRC_Probands_semindels
+#caso não funcione, substituir just-acgt por no-DI, mas isso é um sinal de que a versão do plink está desatualizada
+
+#2) Filtros
+
+#filtrar MAF (frequência do menor alelo), GENO (taxa de SNPs n genotipados) e HWE (eq. Hardy-Weinberg)
+plink2 --bfile BHRC_Probands_semindels --maf 0.01 --geno 0.1 --hwe 0.000001 --make-bed --out BHRC_Probands_genotype_QC
+
+
+#3) Remover cromossomos indesejados (0: unknown, 23: X, 24: Y, 25: XY homóloga, 26: mitocondrial)
+plink2 --bfile BHRC_Probands_genotype_QC --not-chr 0,23-26 --make-bed --keep-allele-order --out arq_genotype_QC_semXY_geral
+
+#4) Remover variantes duplicadas
+plink --bfile BHRC_Probands_QC_semXY_geral --exclude BHRC_Probands_del.dupvar --make-bed --out BHRC_Probands_QCed
+
+
