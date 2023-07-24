@@ -19,15 +19,15 @@ plink2 --bfile BHRC_Probands_semindels --maf 0.01 --geno 0.1 --hwe 0.000001 --ma
 
 
 #3) Remover cromossomos indesejados (0: unknown, 23: X, 24: Y, 25: XY homóloga, 26: mitocondrial)
-plink2 --bfile BHRC_Probands_genotype_QC --not-chr 0,23-26 --make-bed --keep-allele-order --out arq_genotype_QC_semXY_geral
+plink2 --bfile BHRC_Probands_genotype_QC --not-chr 0,23-26 --make-bed --keep-allele-order --out BHRC_genotype_QC_semXY_geral
 
-#4) Remover variantes duplicadas
-plink --bfile BHRC_Probands_QC_semXY_geral --exclude BHRC_Probands_del.dupvar --make-bed --out BHRC_Probands_QCed
+#4) Listas e Remover variantes duplicadas
+ /mnt/genetica_2/Lucas/plink --bfile BHRC_genotype_QC_semXY_geral --list-duplicate-vars suppress-first --out BHRC_Probands_del
+/mnt/genetica_2/Lucas/plink --bfile BHRC_genotype_QC_semXY_geral --exclude BHRC_Probands_del.dupvar --make-bed --out BHRC_Probands_vars_QCed
 
-
-###fiz um hiperlink renomeando
-ln -n BHRC_Probands_QCed.bed ../../../Projeto_bioinfo/BHRC_Probands_vars_QCed.bed              
-ln -n BHRC_Probands_QCed.bim ../../../Projeto_bioinfo/BHRC_Probands_vars_QCed.bim
-ln -n BHRC_Probands_QCed.fam ../../../Projeto_bioinfo/BHRC_Probands_vars_QCed.fam
+##### vou fazer um fazendo o QC completo 
 
 
+
+
+##################
