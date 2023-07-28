@@ -1,0 +1,8 @@
+
+#####primeiro fiz um qc de variantes e agora eu faço de vars e pessoas 
+
+
+###primeiro fazendo o mind 
+./plink --bfile ./coortes/BHRC_Probands_vars_QCed --mind 0.1 --make-bed --out genotest_1
+
+
