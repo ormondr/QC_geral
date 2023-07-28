@@ -5,4 +5,20 @@
 ###primeiro fazendo o mind 
 ./plink --bfile ./coortes/BHRC_Probands_vars_QCed --mind 0.1 --make-bed --out genotest_1
 
+####ibd 
+
+
+#6) IBD: gera o arquivo ibd_calculation.genome, que contém o cálculo IBD
+
+./plink --bfile genotest_1 --genome --min 0.2 --out  genotest_1_ibdcalc
+
+#olhar o arquivo ibd_calculation.genome e ver qual coluna tem a maior qtd. de individuos repetidos, separar essa para excluir: selecionar colunas FID1 e IID1 OU FID2 e IID2
+
+awk '{ print $3,$4 }' genotest_1_ibdcalc.genome > genotest_1_indrelacionados.txt 
+
+#excluir os indivíduos com compartilhamento genetico
+./plink --bfile genotest_1 --remove genotest_1_indrelacionados.txt --make-bed --out ptsd_QC_ibd ./coortes/BHRC_Probands_vars_pers_QC
+
+
+
 
