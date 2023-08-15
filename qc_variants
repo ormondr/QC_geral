@@ -25,9 +25,66 @@ plink2 --bfile BHRC_Probands_genotype_QC --not-chr 0,23-26 --make-bed --keep-all
  /mnt/genetica_2/Lucas/plink --bfile BHRC_genotype_QC_semXY_geral --list-duplicate-vars suppress-first --out BHRC_Probands_del
 /mnt/genetica_2/Lucas/plink --bfile BHRC_genotype_QC_semXY_geral --exclude BHRC_Probands_del.dupvar --make-bed --out BHRC_Probands_vars_QCed
 
-##### vou fazer um fazendo o QC completo 
+
+################## fazendo QC PEP Altura e juntando essa amostra #######################
 
 
 
+#### precisei juntar os arquivos do mesmo chip que estavam separados e com sopreposição 
 
-##################
+#listar variantes duplicadas e excluir 
+
+../plink --bfile pep_16_19_semsobre --list-duplicate-vars suppress-first
+
+../plink --bfile pep_16_19_semsobre --exclude plink.dupvar --make-bed --out pep_16_19_semsobre_pre
+
+
+../plink --bfile ../coortes/pep_psych1.1/PC_Kings_2016_2017_Psychv1.1 --list-duplicate-vars suppress-first
+
+../plink --bfile ../coortes/pep_psych1.1/PC_Kings_2016_2017_Psychv1.1 --exclude plink.dupvar --make-bed --out pep_17_semsobre_pre
+
+
+#Garantindo o mesmo num de SNPS nos dois arquivos e garantindos que nao há alelos trocados
+
+../plink --bfile pep_16_19_semsobre_pre --extract pep_17_semsobre_pre.bim --make-bed --out pep_16_19_semsobre_pre2
+
+../plink --bfile pep_17_semsobre_pre --extract pep_16_19_semsobre_pre.bim --make-bed --out pep_17_semsobre_pre2
+
+###Os dois ficaram com o mesmo num de variantes do arquivo anterior 
+
+#Extraindo as multialelicas antes de realizar o merge
+
+../plink --bfile pep_16_19_semsobre_pre2 --snps-only just-acgt --make-bed --out pep_16_19_semsobre_pre3
+
+../plink --bfile pep_17_semsobre_pre2 --snps-only just-acgt --make-bed --out pep_17_semsobre_pre3
+
+
+#Juntar os arquivos, alvo e referência
+
+../plink --bfile pep_16_19_semsobre_pre3 --bmerge pep_17_semsobre_pre3 --make-bed --out PEP_Psychv1.1_juntos_pre
+
+######deu erro na juncao 
+##### Quando há pelo menos uma variante com mais de 2 alelos, é gerada uma lista de variantes em plink.missnp.
+###nesse caso foram 524 vars
+
+##tentei flipar, nao deu certo, vou excluir
+
+../plink --bfile pep_16_19_semsobre_pre3 --exclude PEP_Psychv1.1_juntos_pre-merge.missnp --make-bed --out pep_16_19_semsobre_limpo
+
+../plink --bfile pep_17_semsobre_pre3 --exclude PEP_Psychv1.1_juntos_pre-merge.missnp --make-bed --out pep_17_semsobre_limpo
+
+######juntando
+../plink --bfile pep_16_19_semsobre_limpo --bmerge pep_17_semsobre_limpo --make-bed --out PEP_Psychv1.1_juntos_pre
+
+
+########## agora fazendo o QC
+
+../plink --bfile PEP_Psychv1.1_juntos_pre --maf 0.01 --geno 0.1 --hwe 0.000001 --make-bed --out PEP_Psychv1.1_juntos_pre2
+
+../plink --bfile PEP_Psychv1.1_juntos_pre2 --not-chr 0,23-26 --make-bed --keep-allele-order --out PEP_Psychv1.1_juntos_pre3
+
+###### vendo mais uma vez se tem var duplicada e já salvando o arquivo final
+
+../plink --bfile PEP_Psychv1.1_juntos_pre3 --list-duplicate-vars suppress-first --out pep_psy_del
+
+../plink --bfile PEP_Psychv1.1_juntos_pre3 --exclude pep_psy_del.dupvar --make-bed --out ../coortes/pep_psych1.1/PEP_Psychv1.1_juntos
