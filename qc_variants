@@ -103,3 +103,9 @@ plink2 --bfile BHRC_Probands_genotype_QC --not-chr 0,23-26 --make-bed --keep-all
 ######### ainda nao é o arquivo final o de cima pq vi que tinham cronicos junto, aqui eu faço um keep sem os crônicos
 
 ../plink --bfile Psychv1.1_juntos --keep keep_apenaspep.txt --make-bed --out ../coortes/pep_psych1.1/PEP_Psychv1.1_juntos
+
+
+
+######## separando os dados de altura 
+
+../plink --bfile ../coortes/pep_psych1.1/PEP_Psychv1.1_juntos --keep keep_altura_pep.txt --make-bed --out ../coortes/pep_psych1.1/PEP_Psychv1.1_altura
