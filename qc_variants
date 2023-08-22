@@ -37,29 +37,27 @@ plink2 --bfile BHRC_Probands_genotype_QC --not-chr 0,23-26 --make-bed --keep-all
 
 ########depois excluo as sopbreposicoes de um dos arquivos para depois fazer o merge 
 
-../plink --bfile ../coortes/pep_psych1.1/PSC_Kings_2016_2019_Psychv1.1 --remove ./sobreposicao_paraexcluir.txt --make-bed --out pep_16_19_semsobre
-
-
+../plink --bfile ../coortes/pep_psych1.1/PC_Kings_2016_2017_Psychv1.1 --remove ./sobreposicao2_paraexcluir.txt --make-bed --out pre_pep_17_semsobre
 
 #### precisei juntar os arquivos do mesmo chip que estavam separados e com sopreposição 
 
 #listar variantes duplicadas e excluir 
 
-../plink --bfile pep_16_19_semsobre --list-duplicate-vars suppress-first
+../plink --bfile pre_pep_17_semsobre --list-duplicate-vars suppress-first
 
-../plink --bfile pep_16_19_semsobre --exclude plink.dupvar --make-bed --out pep_16_19_semsobre_pre
+../plink --bfile pre_pep_17_semsobre --exclude plink.dupvar --make-bed --out pep_17_semsobre
 
 
-../plink --bfile ../coortes/pep_psych1.1/PC_Kings_2016_2017_Psychv1.1 --list-duplicate-vars suppress-first
+../plink --bfile ../coortes/pep_psych1.1/PSC_Kings_2016_2019_Psychv1.1 --list-duplicate-vars suppress-first
 
-../plink --bfile ../coortes/pep_psych1.1/PC_Kings_2016_2017_Psychv1.1 --exclude plink.dupvar --make-bed --out pep_17_semsobre_pre
+../plink --bfile ../coortes/pep_psych1.1/PSC_Kings_2016_2019_Psychv1.1 --exclude plink.dupvar --make-bed --out pep_16_19_semsobre
 
 
 #Garantindo o mesmo num de SNPS nos dois arquivos e garantindos que nao há alelos trocados
 
-../plink --bfile pep_16_19_semsobre_pre --extract pep_17_semsobre_pre.bim --make-bed --out pep_16_19_semsobre_pre2
+../plink --bfile pep_16_19_semsobre --extract pep_17_semsobre.bim --make-bed --out pep_16_19_semsobre_pre2
 
-../plink --bfile pep_17_semsobre_pre --extract pep_16_19_semsobre_pre.bim --make-bed --out pep_17_semsobre_pre2
+../plink --bfile pep_17_semsobre --extract pep_16_19_semsobre_pre.bim --make-bed --out pep_17_semsobre_pre2
 
 ###Os dois ficaram com o mesmo num de variantes do arquivo anterior 
 
@@ -82,10 +80,14 @@ plink2 --bfile BHRC_Probands_genotype_QC --not-chr 0,23-26 --make-bed --keep-all
 
 ../plink --bfile pep_16_19_semsobre_pre3 --exclude PEP_Psychv1.1_juntos_pre-merge.missnp --make-bed --out pep_16_19_semsobre_limpo
 
-../plink --bfile pep_17_semsobre_pre3 --exclude PEP_Psychv1.1_juntos_pre-merge.missnp --make-bed --out pep_17_semsobre_limpo
+../plink --bfile pep_17_semsobre_pre3 --exclude PEP_Psychv1.1_juntos_pre-merge.missnp --make-bed --out pep_17_semsobre_limpo 
 
 ######juntando
 ../plink --bfile pep_16_19_semsobre_limpo --bmerge pep_17_semsobre_limpo --make-bed --out PEP_Psychv1.1_juntos_pre
+
+
+######### editando o arquivo pra igualar os ids #######
+nano PEP_Psychv1.1_juntos_pre.fam
 
 
 ########## agora fazendo o QC
@@ -98,14 +100,17 @@ plink2 --bfile BHRC_Probands_genotype_QC --not-chr 0,23-26 --make-bed --keep-all
 
 ../plink --bfile PEP_Psychv1.1_juntos_pre3 --list-duplicate-vars suppress-first --out pep_psy_del
 
-../plink --bfile PEP_Psychv1.1_juntos_pre3 --exclude pep_psy_del.dupvar --make-bed --out Psychv1.1_juntos
+../plink --bfile PEP_Psychv1.1_juntos_pre3 --exclude pep_psy_del.dupvar --make-bed --out pre_Psychv1.1_juntos
 
-######### ainda nao é o arquivo final o de cima pq vi que tinham cronicos junto, aqui eu faço um keep sem os crônicos
+########## tirando os que deram problema no sex check
+##nesse caso era uma só 
 
-../plink --bfile Psychv1.1_juntos --keep keep_apenaspep.txt --make-bed --out ../coortes/pep_psych1.1/PEP_Psychv1.1_juntos
+../plink --bfile pre_Psychv1.1_juntos --remove sex_check_excluir.txt --make-bed --out semproblems_PEP_Psychv1.1
 
+######### ainda nao é o arquivo final o de cima pq vi que tinham cronicos junto, aqui eu faço um keep sem os crônicos e salvo um arquivo com todos pep pra usar pra esquizo
+
+../plink --bfile semproblems_PEP_Psychv1.1 --keep keep_apenaspep.txt --make-bed --out ../coortes/pep_psych1.1/PEP_Psychv1.1_QCed
 
 
 ######## separando os dados de altura 
-
-../plink --bfile ../coortes/pep_psych1.1/PEP_Psychv1.1_juntos --keep keep_altura_pep.txt --make-bed --out ../coortes/pep_psych1.1/PEP_Psychv1.1_altura
+../plink --bfile ../coortes/pep_psych1.1/PEP_Psychv1.1_QCed --keep keep_altura_pep.txt --make-bed --out ../coortes/pep_psych1.1/PEP_Psychv1.1_QCed_altura
