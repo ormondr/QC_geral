@@ -121,5 +121,6 @@ nano semproblems_PEP_Psychv1.1.fam
 ../plink --bfile semproblems_PEP_Psychv1.1 --keep keep_apenaspep.txt --make-bed --out ../coortes/pep_psych1.1/PEP_Psychv1.1_QCed
 
 
+
 ######## separando os dados de altura 
 ../plink --bfile ../coortes/pep_psych1.1/PEP_Psychv1.1_QCed --keep keep_altura_pep.txt --make-bed --out ../coortes/pep_psych1.1/PEP_Psychv1.1_QCed_altura
