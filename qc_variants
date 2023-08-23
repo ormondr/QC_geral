@@ -102,10 +102,19 @@ nano PEP_Psychv1.1_juntos_pre.fam
 
 ../plink --bfile PEP_Psychv1.1_juntos_pre3 --exclude pep_psy_del.dupvar --make-bed --out pre_Psychv1.1_juntos
 
+##########
+
+
+
 ########## tirando os que deram problema no sex check
 ##nesse caso era uma só 
 
 ../plink --bfile pre_Psychv1.1_juntos --remove sex_check_excluir.txt --make-bed --out semproblems_PEP_Psychv1.1
+
+############## aqui eu destroco 2 IDs que estavam trocados #############
+###P272 e P275, faço isso na mão, no Fam 
+cp semproblems_PEP_Psychv1.1.fam ori_semproblems_PEP_Psychv1.1.fam
+nano semproblems_PEP_Psychv1.1.fam
 
 ######### ainda nao é o arquivo final o de cima pq vi que tinham cronicos junto, aqui eu faço um keep sem os crônicos e salvo um arquivo com todos pep pra usar pra esquizo
 
