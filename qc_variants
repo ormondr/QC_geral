@@ -124,3 +124,33 @@ nano semproblems_PEP_Psychv1.1.fam
 
 ######## separando os dados de altura 
 ../plink --bfile ../coortes/pep_psych1.1/PEP_Psychv1.1_QCed --keep keep_altura_pep.txt --make-bed --out ../coortes/pep_psych1.1/PEP_Psychv1.1_QCed_altura
+
+
+
+################################ cronicos #################
+#### rodei na pasta /mnt/genetica_1/Rafaella/analises_cronicos_esquizo/
+
+#1) Remover indels e SNPs com mais de dois alelos
+
+../plink2 --bfile ../coortes/cronicos/SCZ_semQC --snps-only just-acgt --make-bed --out SCZ_pre1
+#caso não funcione, substituir just-acgt por no-DI, mas isso é um sinal de que a versão do plink está desatualizada
+
+#2) Filtros
+
+###filtrar mind 
+../plink2 --bfile SCZ_pre1 --mind 0.1 --make-bed --out SCZ_pre2
+#filtrar MAF (frequência do menor alelo), GENO (taxa de SNPs n genotipados) e HWE (eq. Hardy-Weinberg)
+../plink2 --bfile SCZ_pre2 --maf 0.01 --geno 0.1 --hwe 0.000001 --make-bed --out SCZ_pre3
+
+#3) tirar o que deu problema no sexcheck que eu havia testado 
+../plink2 --bfile SCZ_pre3 -remove exclude_sexcheck.txt --make-bed --out SCZ_pre4
+
+
+
+#4) Remover cromossomos indesejados (0: unknown, 23: X, 24: Y, 25: XY homóloga, 26: mitocondrial)
+../plink2 --bfile SCZ_pre4 --not-chr 0,23-26 --make-bed --keep-allele-order --out SCZ_pre5
+
+#5) Listas e Remover variantes duplicadas
+../plink --bfile SCZ_pre5 --list-duplicate-vars suppress-first --out BHRC_Probands_del
+../plink --bfile SCZ_pre5 --exclude SCZ_del.dupvar --make-bed --out ../coortes/cronicos/SCZ_cronicos_QCed
+
